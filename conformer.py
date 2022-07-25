@@ -713,14 +713,14 @@ class Decoder(nn.Module):
         d=lde_t[:, 1:].transpose(1, 2).unflatten(2,(20,20))
         depth_lde=self.upsample1(lde_t[:, 1:].transpose(1, 2).unflatten(2,(20,20)))
         edge_rgbd=self.up2(self.up2(rgb_lde+depth_lde))
-        print('edge',edge_rgbd.shape)
+        #print('edge',edge_rgbd.shape)
         '''for i in range(len(lde_c)):
             print(lde_c[i].shape,lde_t[i].shape)'''
         
         sal_final=self.up2(self.up2(sal_low+self.up2((sal_med+(self.up2(sal_high))))))
         #print(sal_high.shape,sal_med.shape,sal_low.shape, sal_final.shape)
 
-        return sal_final,sal_low,sal_med,sal_high
+        return sal_final,sal_low,sal_med,sal_high,edge_rgbd
 
 
 class JL_DCF(nn.Module):
@@ -740,9 +740,9 @@ class JL_DCF(nn.Module):
         coarse_sal_rgb,coarse_sal_depth=self.coarse_layer(x[12],y[12])
         rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l=self.gde_layers(x,y,coarse_sal_rgb,coarse_sal_depth)
 
-        sal_final,sal_low,sal_med,sal_high=self.decoder(lde_c,lde_t,rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l)
+        sal_final,sal_low,sal_med,sal_high,e_rgbd=self.decoder(lde_c,lde_t,rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l)
 
-        return sal_final,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att
+        return sal_final,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att,e_rgbd
 
 def build_model(network='conformer', base_model_cfg='conformer'):
    
