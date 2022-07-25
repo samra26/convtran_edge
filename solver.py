@@ -123,7 +123,7 @@ class Solver(object):
                     continue
                 if self.config.cuda:
                     device = torch.device(self.config.device_id)
-                    sal_image, sal_depth, sal_label = sal_image.to(device), sal_depth.to(device), sal_label.to(device)
+                    sal_image, sal_depth, sal_label = sal_image.to(device), sal_depth.to(device), sal_label.to(device),sal_edge.to(device)
 
                
                 self.optimizer.zero_grad()
