@@ -92,7 +92,7 @@ class Solver(object):
                     depth = depth.to(device)
 
                 #input = torch.cat((images, depth), dim=0)
-                preds,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att = self.net(images,depth)
+                preds,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att,e_rgbd = self.net(images,depth)
                 #print(preds.shape)
                 preds = F.interpolate(preds, tuple(im_size), mode='bilinear', align_corners=True)
                 pred = np.squeeze(torch.sigmoid(preds)).cpu().data.numpy()
