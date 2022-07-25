@@ -701,7 +701,8 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         self.upsample=nn.ConvTranspose2d(64, 1, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
         self.upsample1=nn.ConvTranspose2d(384, 1, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
-        self.up2= nn.ConvTranspose2d(1, 1, kernel_size=4, stride=2, padding=1)     
+        self.up2= nn.ConvTranspose2d(1, 1, kernel_size=4, stride=2, padding=1) 
+        
         
     def forward(self, lde_c,lde_t,rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l):
         sal_high=rgb_h+depth_h
@@ -711,7 +712,7 @@ class Decoder(nn.Module):
         rgb_lde=self.upsample(lde_c)
         d=lde_t[:, 1:].transpose(1, 2).unflatten(2,(20,20))
         depth_lde=self.upsample1(lde_t[:, 1:].transpose(1, 2).unflatten(2,(20,20)))
-        edge_rgbd=torch.cat((rgb_lde,depth_lde),dim=1)
+        edge_rgbd=self.up2(self.up2(rgb_lde+depth_lde))
         print('edge',edge_rgbd.shape)
         '''for i in range(len(lde_c)):
             print(lde_c[i].shape,lde_t[i].shape)'''
